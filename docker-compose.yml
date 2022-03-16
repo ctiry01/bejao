@@ -1,0 +1,27 @@
+version: "2"
+services:
+  app:
+    build: devops/phpdev
+    volumes:
+      - .:/app
+    env_file:
+      - ./.env
+    links:
+      - database
+    command: '/run.sh'
+    ports:
+      - "8000:8000"
+    container_name: bejao_backend
+
+  frontendbuild:
+    build: devops/devfrontend
+    volumes:
+      - .:/app
+    command: '/run.sh'
+  database:
+    build: devops/database
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=app
+    ports:
+      - "3366:3306"
