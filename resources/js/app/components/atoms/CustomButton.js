@@ -2,31 +2,18 @@ import React from 'react'
 import styled from 'styled-components'
 import ReactLoading from 'react-loading'
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    children?: any
-    color?: string
-    url?: string
-    radius?: number
-    onClick?: React.MouseEventHandler<HTMLButtonElement>
-    disabled?: boolean
-    border?: string
-    icon?: object
-    bgColor?: string
-    loading?: boolean
-}
-
-export const Button = ({
-                           bgColor,
-                           color,
-                           children,
-                           radius = 30,
-                           onClick,
-                           disabled,
-                           border,
-                           icon,
-                           loading,
-                           ...others
-                       }: ButtonProps) => {
+export const CustomButton = ({
+                                 bgColor,
+                                 color,
+                                 children,
+                                 radius = 16,
+                                 onClick,
+                                 disabled,
+                                 border,
+                                 icon,
+                                 loading,
+                                 ...others
+                             }) => {
     return (
         <Rectangle
             onClick={onClick}
@@ -44,18 +31,12 @@ export const Button = ({
     )
 }
 
-const Rectangle = styled.button<{
-    color?: string
-    radius: number
-    disabled?: boolean
-    border?: string
-    bgColor?: string
-}>`
+const Rectangle = styled.button`
     border: ${({border}) => (border ? '1px solid ' + border : 'none')};
     border-radius: ${({radius}) => `${radius}px`};
-    background-color: ${({disabled, bgColor}) => (disabled ? 'lightGrey' : bgColor ? bgColor : '#5e8dff')};
+    background-color: ${({disabled, bgColor}) => (disabled ? 'lightGrey' : bgColor ? bgColor : '#0074E7')};
     color: ${({color}) => (color ? color : 'white')};
-    box-shadow: 5px 5px 15px -4px ${({theme}) => theme.colors.buttonShadow};
+    box-shadow: 5px 5px 15px -4px #a7aab1;
     padding: 1rem 2rem;
     display: flex;
     align-items: center;
@@ -64,6 +45,10 @@ const Rectangle = styled.button<{
     column-gap: 0.5rem;
     cursor: ${({disabled}) => (disabled ? 'default' : 'pointer')};
     font-size: 1rem;
+
+    &:hover {
+        background-color: #0074E7;
+    }
 `
 
 const WrapperIcon = styled.div`
