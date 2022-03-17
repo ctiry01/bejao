@@ -35,12 +35,24 @@ class DatabaseSeeder extends Seeder
 
         Vehicle::init(
             Brands::find(1),
-            'A4',
-            5,
-            6.0,
+            'TT',
+            4,
+            6.2,
             Engine::find(1),
             User::find(1)
         );
+
+        $v = Vehicle::init(
+            Brands::find(2),
+            'CLS',
+            5,
+            7.4,
+            Engine::find(2),
+            User::find(1)
+        );
+
+        $v->disable();
+        $v->save();
 
         Vehicle::init(
             Brands::find(2),
@@ -99,6 +111,38 @@ class DatabaseSeeder extends Seeder
             'Sabadell',
             User::find(2),
             '17:00'
+        );
+
+        Journey::init(
+            'Gimnasio',
+            'Gava',
+            'Castelldefels',
+            User::find(3),
+            '18:00'
+        );
+
+        Journey::init(
+            'Vuelta del gimnasio',
+            'Castelldefels',
+            'Gava',
+            User::find(3),
+            '19:00'
+        );
+
+        Journey::init(
+            'Fisio',
+            'Sant Boi',
+            'Viladecans',
+            User::find(4),
+            '14:30'
+        );
+
+        Journey::init(
+            'Vuelta del fisio',
+            'Viladecans',
+            'Sant Boi',
+            User::find(4),
+            '16:10'
         );
     }
 }

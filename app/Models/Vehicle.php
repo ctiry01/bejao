@@ -118,4 +118,9 @@ class Vehicle extends Model
     {
         return $query->where('seats', '>=', $seats + 1);
     }
+
+    public function scopeOthers($query, User $user)
+    {
+        return $query->where('id_user', '!=', $user->id);
+    }
 }

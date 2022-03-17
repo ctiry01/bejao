@@ -10,8 +10,6 @@ export const VehiclesBox = () => {
 
     if (!userContextState.userData) return null
 
-    console.log(JSON.stringify(userContextState.userData.user.vehicles))
-
     return (
         <Card>
             <Title>Tus vehículos</Title>
@@ -26,6 +24,7 @@ export const VehiclesBox = () => {
                                 fuelCons={vehicle.fuel_consumption}
                                 model={vehicle.model}
                                 seats={vehicle.seats}
+                                active={vehicle.active}
                             />
                         )
                     })

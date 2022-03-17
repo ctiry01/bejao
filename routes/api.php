@@ -25,6 +25,7 @@ use App\Http\Controllers\RequestVehicleController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
+Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
 
 Route::middleware('auth:sanctum')->get('/vehicles', [VehicleController::class, 'index']);

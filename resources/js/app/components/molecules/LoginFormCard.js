@@ -19,9 +19,6 @@ export const LoginFormCard = () => {
     //const userContextState = useUserState();
     //console.log(userContextState);
 
-    useEffect(() => {
-
-    }, [loading])
 
     const onSubmmit = () => {
         setLoading(true)

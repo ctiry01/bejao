@@ -5,6 +5,10 @@ const user = {
         return await postApi("login", {email, password})
     },
 
+    logout: async () => {
+        return await postApi("logout", {})
+    },
+
     register: async (name, email, password) => {
         return await postApi("register", {name, email, password})
     },

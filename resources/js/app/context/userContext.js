@@ -16,6 +16,7 @@ const UserDispatch = React.createContext(defaultDispatch);
 export async function UserLogin(email, password) {
     const res = await user.login(email, password)
 
+    localStorage.clear()
     localStorage.setItem('apikey', res.token)
 
     return {
@@ -27,6 +28,9 @@ export async function UserLogin(email, password) {
 export async function UserRegister(name, email, password) {
     const res = await user.register(name, email, password)
 
+    localStorage.clear()
+    localStorage.setItem('apikey', res.token)
+
     return {
         type: 'register',
         payload: res
@@ -34,7 +38,8 @@ export async function UserRegister(name, email, password) {
 }
 
 export async function RequestVehicle(seats, origin, destination) {
-    const res = await search.requestVehicle(seats, origin, destination)
+
+    const res = await search.requestVehicle(seats, origin, destination, localStorage.apikey)
 
     return {
         type: 'search',
@@ -44,6 +49,11 @@ export async function RequestVehicle(seats, origin, destination) {
 
 const ContextReducer = (state, action) => {
     switch (action.type) {
+        case 'logout':
+            return {
+                ...state
+            }
+
         case 'login':
             return {
                 ...state,

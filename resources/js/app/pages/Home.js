@@ -11,7 +11,7 @@ export const Home = () => {
     const navigate = useNavigate();
     const userContextState = useUserState();
 
-    console.log(userContextState)
+    //console.log(userContextState)
 
     useEffect(() => {
         if (!(userContextState.userData && userContextState.userData.token)) {

@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 
-export const Separator = () => {
+export const Separator = ({size = 1}) => {
     return (
-        <WrapperSeparator/>
+        <WrapperSeparator size={size}/>
     )
 }
 
 const WrapperSeparator = styled.div`
-    padding: 1rem 0;
+    padding: ${({size}) => `${size}rem`} 0;
 `

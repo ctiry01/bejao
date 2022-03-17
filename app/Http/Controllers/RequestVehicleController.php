@@ -26,15 +26,12 @@ class RequestVehicleController extends Controller
             'destination_address' => 'nullable|string',
         ]);
 
+        $user = Auth::user();
 
-        dd(Auth::user());
-
-        $vehicles = Vehicle::isActive()->bySeats($request->get('seats'))->get();
+        $vehicles = Vehicle::isActive()->bySeats($request->get('seats'))->others($user)->get();
 
         $res = $this->matchService->searchVehicles($vehicles, $request->get('origin_address'), $request->get('destination_address'));
 
         return response()->json($res, Response::HTTP_OK);
     }
-
-
 }

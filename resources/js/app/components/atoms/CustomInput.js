@@ -4,11 +4,12 @@ import { BsCheckCircleFill } from 'react-icons/bs'
 import styled from 'styled-components'
 
 const TextInput = forwardRef(function FreeActivityPasswordForm(
-    { placeholder, className, valid, ...other },
+    { placeholder, className, valid, label, ...other },
     ref
 ) {
     return (
         <Wrapper>
+            {label && <label>{label}</label>}
             <Input placeholder={placeholder} {...other} ref={ref} />
             {valid && <ValidIcon size="1.4rem" color="#72cc77" />}
         </Wrapper>

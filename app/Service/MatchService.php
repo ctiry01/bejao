@@ -34,6 +34,19 @@ class MatchService
             return $bufferVehicles;
         }
 
+        if ($destination) {
+            foreach ($vehicles as $vehicle) {
+                if (count($vehicle->user->journeys) > 0) {
+                    foreach ($vehicle->user->journeys as $journey) {
+                        if (strtolower($journey->origin_address) == strtolower($destination)) {
+                            $bufferVehicles [] = $vehicle->serializeWithUser();
+                        }
+                    }
+                }
+            }
+            return $bufferVehicles;
+        }
+
         foreach ($vehicles as $vehicle) {
             if (count($vehicle->user->journeys) > 0) {
                 $bufferVehicles [] = $vehicle->serializeWithUser();
