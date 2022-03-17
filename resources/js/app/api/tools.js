@@ -2,10 +2,11 @@ const SERVER = 'http://localhost:8000/api/'
 
 const token = localStorage.getItem('apikey')
 
-export async function postApi(url, payload) {
+export async function postApi(url, payload, tk) {
 
     const headers = {
         'Content-Type': 'application/json',
+        'Authorization' : 'Bearer ', token
     }
 
     if(token) headers.Authorization = token

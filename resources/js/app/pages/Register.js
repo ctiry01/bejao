@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import {LoginFormCard} from "../components/molecules/LoginFormCard";
+import {RegisterFormCard} from "../components/molecules/RegisterFormCard";
 
-export const Login = () => {
+export const Register = () => {
 
     return (
         <WrapperLogin>
-            <LoginFormCard/>
+            <RegisterFormCard/>
         </WrapperLogin>
     )
 }

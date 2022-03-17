@@ -47,7 +47,7 @@ const Rectangle = styled.button`
     font-size: 1rem;
 
     &:hover {
-        background-color: #0074E7;
+        background-color: ${({disabled, bgColor}) => (disabled ? 'lightGrey' : bgColor ? bgColor : '#04509f')};
     }
 `
 

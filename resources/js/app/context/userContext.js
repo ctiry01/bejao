@@ -1,11 +1,14 @@
 import React from "react";
 import user from "../api/user";
+import search from "../api/search";
 
 
 const defaultState = {
     userData: null,
+    resultData: null
 }
-const defaultDispatch = () => {}
+const defaultDispatch = () => {
+}
 
 const UserContext = React.createContext(defaultState);
 const UserDispatch = React.createContext(defaultDispatch);
@@ -13,11 +16,30 @@ const UserDispatch = React.createContext(defaultDispatch);
 export async function UserLogin(email, password) {
     const res = await user.login(email, password)
 
+    localStorage.setItem('apikey', res.token)
+
     return {
         type: 'login',
         payload: res
     }
+}
 
+export async function UserRegister(name, email, password) {
+    const res = await user.register(name, email, password)
+
+    return {
+        type: 'register',
+        payload: res
+    }
+}
+
+export async function RequestVehicle(seats, origin, destination) {
+    const res = await search.requestVehicle(seats, origin, destination)
+
+    return {
+        type: 'search',
+        payload: res
+    }
 }
 
 const ContextReducer = (state, action) => {
@@ -28,13 +50,25 @@ const ContextReducer = (state, action) => {
                 userData: action.payload
             }
 
+        case 'register':
+            return {
+                ...state,
+                userData: action.payload
+            }
+
+        case 'search':
+            return {
+                ...state,
+                resultData: action.payload
+            }
+
         default: {
             throw new Error(`Unhandled action type: ${action.type}`);
         }
     }
 };
 
-export const UserProvider = ({ children }) => {
+export const UserProvider = ({children}) => {
 
     const [state, dispatch] = React.useReducer(
         ContextReducer,
@@ -73,7 +107,7 @@ export const useUserState = () => {
     return context;
 };
 
-export const useUserDispatcher = ()  => {
+export const useUserDispatcher = () => {
     const context = React.useContext(UserDispatch);
     if (context === undefined) {
         throw new Error('useUserDispatcher must be used within a UserProvider');

@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
     return ['Laravel' => app()->version()];
 });*/
 
-Route::get('/', function () {
+Route::get('/{path?}', function () {
     return view('welcome');
 });
 

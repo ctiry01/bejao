@@ -1,19 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
-import {Login} from "./pages/Login";
 import GlobalStyles from "./components/GlobalStyles";
 import {UserProvider} from "./context/userContext";
+import {BrowserRouter} from "react-router-dom";
+import {Router} from "./Router";
 
 
 export default function App() {
+
     return (
-        <UserProvider>
-            <WrapperApp>
-                <GlobalStyles/>
-                <Login/>
-            </WrapperApp>
-        </UserProvider>
+        <BrowserRouter>
+            <UserProvider>
+                <WrapperApp>
+                    <GlobalStyles/>
+                    <Router/>
+                </WrapperApp>
+            </UserProvider>
+        </BrowserRouter>
     )
 }
 

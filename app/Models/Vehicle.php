@@ -62,7 +62,20 @@ class Vehicle extends Model
             'fuel_consumption' => $this->fuel_consumption,
             'engine' => $this->engine->name,
             'active' => (bool)$this->is_active,
-            'user' => $this->user->serialize()
+        ];
+    }
+
+    public function serializeWithUser()
+    {
+        return [
+            'key' => $this->key,
+            'brand' => $this->brand->name,
+            'model' => $this->model,
+            'seats' => $this->seats,
+            'fuel_consumption' => $this->fuel_consumption,
+            'engine' => $this->engine->name,
+            'active' => (bool)$this->is_active,
+            'user' => $this->user->serializeWithJourneys()
         ];
     }
 
@@ -101,7 +114,8 @@ class Vehicle extends Model
         return $query->where('is_active', true);
     }
 
-    public function scopeBySeats($query, int $seats) {
-        return $query->where('seats', '>=', $seats +1);
+    public function scopeBySeats($query, int $seats)
+    {
+        return $query->where('seats', '>=', $seats + 1);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Vehicle;
 use App\Service\MatchService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\JsonResponse;
 
@@ -24,6 +25,9 @@ class RequestVehicleController extends Controller
             'origin_address' => 'nullable|string',
             'destination_address' => 'nullable|string',
         ]);
+
+
+        dd(Auth::user());
 
         $vehicles = Vehicle::isActive()->bySeats($request->get('seats'))->get();
 

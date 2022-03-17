@@ -71,7 +71,14 @@ class User extends Authenticatable
 
     public function serialize(): array
     {
+        return [
+            'name' => $this->name,
+            'email' => $this->email,
+        ];
+    }
 
+    public function serializeWithJourneys(): array
+    {
         $bufferJourneys = [];
 
         foreach ($this->journeys as $journey) {
@@ -81,7 +88,29 @@ class User extends Authenticatable
         return [
             'name' => $this->name,
             'email' => $this->email,
-            'journeys' => $bufferJourneys
+            'journeys' => $bufferJourneys,
+        ];
+    }
+
+    public function serializeWithUsersAndJourneys(): array
+    {
+        $bufferJourneys = [];
+
+        foreach ($this->journeys as $journey) {
+            $bufferJourneys [] = $journey->serialize();
+        }
+
+        $bufferVehicles = [];
+
+        foreach ($this->vehicles as $vehicle) {
+            $bufferVehicles [] = $vehicle->serialize();
+        }
+
+        return [
+            'name' => $this->name,
+            'email' => $this->email,
+            'journeys' => $bufferJourneys,
+            'vehicles' => $bufferVehicles
         ];
     }
 

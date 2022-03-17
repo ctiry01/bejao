@@ -13,7 +13,7 @@ class MatchService
                 if (count($vehicle->user->journeys) > 0) {
                     foreach ($vehicle->user->journeys as $journey) {
                         if (strtolower($journey->origin_address) == strtolower($origin) && strtolower($journey->destination_address) == strtolower($destination)) {
-                            $bufferVehicles [] = $vehicle->serialize();
+                            $bufferVehicles [] = $vehicle->serializeWithUser();
                         }
                     }
                 }
@@ -26,7 +26,7 @@ class MatchService
                 if (count($vehicle->user->journeys) > 0) {
                     foreach ($vehicle->user->journeys as $journey) {
                         if (strtolower($journey->origin_address) == strtolower($origin)) {
-                            $bufferVehicles [] = $vehicle->serialize();
+                            $bufferVehicles [] = $vehicle->serializeWithUser();
                         }
                     }
                 }
@@ -36,7 +36,7 @@ class MatchService
 
         foreach ($vehicles as $vehicle) {
             if (count($vehicle->user->journeys) > 0) {
-                $bufferVehicles [] = $vehicle->serialize();
+                $bufferVehicles [] = $vehicle->serializeWithUser();
             }
         }
         return $bufferVehicles;
