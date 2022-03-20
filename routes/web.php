@@ -17,8 +17,12 @@ use Illuminate\Support\Facades\Route;
     return ['Laravel' => app()->version()];
 });*/
 
+Route::get('/test', [\App\Http\Controllers\RequestVehicleController::class, 'index']);
+
+
 Route::get('/{path?}', function () {
     return view('welcome');
 });
+
 
 require __DIR__.'/auth.php';

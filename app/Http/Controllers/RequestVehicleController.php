@@ -20,18 +20,18 @@ class RequestVehicleController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        $request->validate([
+        /*$request->validate([
             'seats' => 'required|numeric',
             'origin_address' => 'nullable|string',
             'destination_address' => 'nullable|string',
-        ]);
+        ]);*/
 
-        $user = Auth::user();
+        //$user = Auth::user();
 
-        $vehicles = Vehicle::isActive()->bySeats($request->get('seats'))->others($user)->get();
+        //$vehicles = Vehicle::isActive()->bySeats($request->get('seats'))->others($user)->get();
 
-        $res = $this->matchService->searchVehicles($vehicles, $request->get('origin_address'), $request->get('destination_address'));
+        $this->matchService->searchVehicles();
 
-        return response()->json($res, Response::HTTP_OK);
+        return response()->json("done", Response::HTTP_OK);
     }
 }
