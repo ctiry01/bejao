@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -26,7 +26,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'is_active'
+        'is_active',
+        'origin_address',
+        'destination_address',
     ];
 
     /**
@@ -49,23 +51,20 @@ class User extends Authenticatable
     ];
 
 
-    public function vehicles(): HasMany
+    public function vehicle(): HasOne
     {
-        return $this->hasMany(Vehicle::class, 'id_user', 'id');
+        return $this->hasOne(Vehicle::class, 'id_user', 'id');
     }
 
-    public function journeys(): HasMany
-    {
-        return $this->hasMany(Journey::class, 'id_user', 'id');
-    }
-
-    public static function init(string $name, string $email, string $password): User
+    public static function init(string $name, string $email, string $password, string $origin, string $destination): User
     {
         return User::create([
             'key' => 'u-' . Uuid::uuid4(),
             'name' => $name,
             'email' => $email,
-            'password' => Hash::make($password)
+            'password' => Hash::make($password),
+            'origin_address' => $origin,
+            'destination_address' => $destination
         ]);
     }
 
@@ -77,45 +76,13 @@ class User extends Authenticatable
         ];
     }
 
-    public function serializeWithJourneys(): array
-    {
-        $bufferJourneys = [];
-
-        foreach ($this->journeys as $journey) {
-            $bufferJourneys [] = $journey->serialize();
-        }
-
-        return [
-            'name' => $this->name,
-            'email' => $this->email,
-            'journeys' => $bufferJourneys,
-        ];
-    }
-
-    public function serializeWithUsersAndJourneys(): array
-    {
-        $bufferJourneys = [];
-
-        foreach ($this->journeys as $journey) {
-            $bufferJourneys [] = $journey->serialize();
-        }
-
-        $bufferVehicles = [];
-
-        foreach ($this->vehicles as $vehicle) {
-            $bufferVehicles [] = $vehicle->serialize();
-        }
-
-        return [
-            'name' => $this->name,
-            'email' => $this->email,
-            'journeys' => $bufferJourneys,
-            'vehicles' => $bufferVehicles
-        ];
-    }
-
     public function scopeByEmail($query, string $email)
     {
         return $query->where('email', $email);
+    }
+
+    public function scopeByOriginDestination($query, string $origin, string $destination)
+    {
+        return $query->where('origin_address', $origin)->where('destination_address', $destination);
     }
 }

@@ -59,7 +59,6 @@ export const SearchBox = () => {
                                     brand={res.brand}
                                     name={res.user.name}
                                     email={res.user.email}
-                                    journeys={res.user.journeys}
                                 />
                             </WrapperResult>
                         )

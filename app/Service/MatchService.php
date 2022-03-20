@@ -10,30 +10,19 @@ class MatchService
     const VEHICLE_SEATS = 'seats';
     const VEHICLE_ID = 'id';
 
-    public function searchVehicles()
+    public function searchVehicles($allTripUsers)
     {
-        $vehicles = [
-            [
-                self::VEHICLE_CONSUMPTION => 5,
-                self::VEHICLE_SEATS => 4,
-                self::VEHICLE_ID => 1
-            ],
-            [
-                self::VEHICLE_CONSUMPTION => 6,
-                self::VEHICLE_SEATS => 4,
-                self::VEHICLE_ID => 2
-            ],
-            [
-                self::VEHICLE_CONSUMPTION => 7,
-                self::VEHICLE_SEATS => 8,
-                self::VEHICLE_ID => 3
-            ],
-            [
-                self::VEHICLE_CONSUMPTION => 13,
-                self::VEHICLE_SEATS => 12,
-                self::VEHICLE_ID => 4
-            ]
-        ];
+        $vehicles = [];
+
+        foreach ($allTripUsers as $user) {
+            if ($user->vehicle) {
+                $vehicles [] = [
+                    self::VEHICLE_CONSUMPTION => $user->vehicle->fuel_consumption,
+                    self::VEHICLE_SEATS => $user->vehicle->seats,
+                    self::VEHICLE_ID => $user->vehicle->id
+                ];
+            }
+        }
 
         $bufferVehicle = [];
 
@@ -60,7 +49,6 @@ class MatchService
                         $seats => array_sum(array_column($buffer, $seats)),
                         $id => $bufferArrayIdVehicles
                     ];
-
 
                     if ($arrayVehicles[0][$id] !== $arrayVehicles[count($arrayVehicles) - 1][$id]) {
                         $bufferArrayIdVehicles = [];
@@ -90,7 +78,6 @@ class MatchService
                 self::VEHICLE_SEATS,
                 self::VEHICLE_ID
             );
-
             array_shift($vehicles);
         }
 
@@ -99,11 +86,17 @@ class MatchService
         $bufferVehicle = array_values($bufferVehicle);
 
         uasort($bufferVehicle, function ($a, $b) {
-            return strnatcmp($a[self::VEHICLE_CONSUMPTION], $b[self::VEHICLE_CONSUMPTION]); // or other function/code
+            return strnatcmp($a[self::VEHICLE_CONSUMPTION], $b[self::VEHICLE_CONSUMPTION]);
         });
+
         $bufferVehicle = array_values($bufferVehicle);
 
-        dd($bufferVehicle);
+        foreach ($bufferVehicle as $vehicle) {
+            if ($vehicle['seats'] >= count($allTripUsers)) {
+                return $vehicle;
+            }
+        }
 
+        return null;
     }
 }

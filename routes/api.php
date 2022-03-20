@@ -4,7 +4,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\VehicleController;
-use App\Http\Controllers\JourneyController;
 use App\Http\Controllers\RequestVehicleController;
 
 /*
@@ -33,13 +32,6 @@ Route::middleware('auth:sanctum')->post('/vehicle', [VehicleController::class, '
 Route::middleware('auth:sanctum')->post('/vehicle/enable', [VehicleController::class, 'enable']);
 Route::middleware('auth:sanctum')->post('/vehicle/disable', [VehicleController::class, 'disable']);
 Route::middleware('auth:sanctum')->post('/vehicle/remove', [VehicleController::class, 'remove']);
-
-
-Route::middleware('auth:sanctum')->get('/journeys', [JourneyController::class, 'index']);
-Route::middleware('auth:sanctum')->post('/journey', [JourneyController::class, 'store']);
-Route::middleware('auth:sanctum')->post('/journey/enable', [JourneyController::class, 'enable']);
-Route::middleware('auth:sanctum')->post('/journey/disable', [JourneyController::class, 'disable']);
-Route::middleware('auth:sanctum')->post('/journey/remove', [JourneyController::class, 'remove']);
 
 
 Route::middleware('auth:sanctum')->post('/request-vehicle', [RequestVehicleController::class, 'index']);

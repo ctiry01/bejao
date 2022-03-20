@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Vehicle;
 use App\Service\MatchService;
 use Illuminate\Http\Request;
@@ -20,18 +21,23 @@ class RequestVehicleController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        /*$request->validate([
-            'seats' => 'required|numeric',
+        $request->validate([
             'origin_address' => 'nullable|string',
             'destination_address' => 'nullable|string',
-        ]);*/
+        ]);
 
-        //$user = Auth::user();
+        $user = Auth::user();
 
-        //$vehicles = Vehicle::isActive()->bySeats($request->get('seats'))->others($user)->get();
+        $allTripUsers = User::byOriginDestination($user->origin_address, $user->destination_address)->get();
 
-        $this->matchService->searchVehicles();
 
-        return response()->json("done", Response::HTTP_OK);
+        $res = $this->matchService->searchVehicles($allTripUsers);
+
+        $vehicles = [];
+        foreach ($res['id'] as $idVechile) {
+            $vehicles [] = Vehicle::find($idVechile)->serialize();
+        }
+
+        return response()->json($vehicles, Response::HTTP_OK);
     }
 }

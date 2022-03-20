@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Brands;
 use App\Models\Engine;
-use App\Models\Journey;
 use App\Models\User;
 use App\Models\Vehicle;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -121,37 +120,6 @@ class IntegrationTest extends TestCase
         self::removeRecords();
     }
 
-    public function test_journey_store()
-    {
-        //given
-        self::createExampleUser();
-
-        //when
-        $response = $this->post('/api/journey', [
-            'name' => 'example journey',
-            'origin_address' => 'city 1',
-            'destination_address' => 'city 2',
-            'time' => '09:00',
-        ], ['Authorization' => self::getToken()]);
-
-        //then
-        $response->assertStatus(201);
-        self::removeRecords();
-    }
-
-    public function test_journeys()
-    {
-        //given
-        self::createExampleJourney();
-
-        //when
-        $response = $this->get('/api/journeys', ['Authorization' => self::getToken()]);
-
-        //then
-        $response->assertStatus(200);
-        self::removeRecords();
-    }
-
     public function test_require_search_vehicle()
     {
         //given
@@ -174,17 +142,6 @@ class IntegrationTest extends TestCase
             'test',
             'example@mail.com',
             'asdfasdf'
-        );
-    }
-
-    private function createExampleJourney(): Journey
-    {
-        return Journey::init(
-            'any journey',
-            'city 1',
-            'city 2',
-            self::createExampleUser(),
-            '09:00'
         );
     }
 
@@ -221,7 +178,6 @@ class IntegrationTest extends TestCase
         DB::table('engines')->truncate();
         DB::table('users')->truncate();
         DB::table('vehicles')->truncate();
-        DB::table('journeys')->truncate();
     }
 
     private function getToken()

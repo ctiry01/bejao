@@ -38,7 +38,7 @@ class AuthController extends Controller
         $token = $user->createToken('myapptoken')->plainTextToken;
 
         $response = [
-            'user' => $user->serializeWithUsersAndJourneys(),
+            'user' => $user->serialize(),
             'token' => $token
         ];
 
@@ -62,7 +62,7 @@ class AuthController extends Controller
         $token = $user->createToken('myapptoken')->plainTextToken;
 
         $response = [
-            'user' => $user->serializeWithUsersAndJourneys(),
+            'user' => $user->serialize(),
             'token' => $token
         ];
 
