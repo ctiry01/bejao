@@ -10,26 +10,23 @@ export const VehiclesBox = () => {
 
     if (!userContextState.userData) return null
 
+    console.log(userContextState.userData.user.vehicle)
     return (
         <Card>
             <Title>Tus vehículos</Title>
             <WrapperVehicles>
-                {userContextState.userData.user.vehicles.length > 0 &&
-                    userContextState.userData.user.vehicles.map((vehicle) => {
-                        return (
-                            <VehicleCard
-                                key={vehicle.key}
-                                brand={vehicle.brand}
-                                engine={vehicle.engine}
-                                fuelCons={vehicle.fuel_consumption}
-                                model={vehicle.model}
-                                seats={vehicle.seats}
-                                active={vehicle.active}
-                            />
-                        )
-                    })
+                {userContextState.userData.user.vehicle &&
+                    <VehicleCard
+                        key={vehicle.key}
+                        brand={vehicle.brand}
+                        engine={vehicle.engine}
+                        fuelCons={vehicle.fuel_consumption}
+                        model={vehicle.model}
+                        seats={vehicle.seats}
+                        active={vehicle.active}
+                    />
                 }
-                {userContextState.userData.user.vehicles.length <= 0 && <p>No tienes vehículos dados de alta</p>}
+                {userContextState.userData.user.vehicle.length <= 0 && <p>No tienes vehículos dados de alta</p>}
             </WrapperVehicles>
         </Card>
     )

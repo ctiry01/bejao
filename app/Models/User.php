@@ -73,6 +73,7 @@ class User extends Authenticatable
         return [
             'name' => $this->name,
             'email' => $this->email,
+            'vehicle' => $this->vehicle ? $this->vehicle->serialize() : null,
         ];
     }
 

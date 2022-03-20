@@ -28,7 +28,7 @@ export const Home = () => {
                 <h1>¡Hola {userContextState.userData.user.name}!</h1>
             </Card>
             <Separator />
-            <VehiclesBox />
+            {/*<VehiclesBox />*/}
             <Separator />
             <SearchBox />
         </WrapperLogin>

@@ -28,15 +28,24 @@ class RequestVehicleController extends Controller
 
         $user = Auth::user();
 
-        $allTripUsers = User::byOriginDestination($user->origin_address, $user->destination_address)->get();
+        $origin = $request->get('origin_address') ? $request->get('origin_address') : $user->origin_address;
+        $destination = $request->get('destination_address') ? $request->get('destination_address') : $user->destination_address;
 
+        $allTripUsers = User::byOriginDestination($origin, $destination)->get();
 
-        $res = $this->matchService->searchVehicles($allTripUsers);
 
         $vehicles = [];
-        foreach ($res['id'] as $idVechile) {
-            $vehicles [] = Vehicle::find($idVechile)->serialize();
+
+        if (count($allTripUsers) > 0) {
+            $res = $this->matchService->searchVehicles($allTripUsers);
+
+            if ($res) {
+                foreach ($res[MatchService::VEHICLE_ID] as $idVechile) {
+                    $vehicles [] = Vehicle::find($idVechile)->serialize(true);
+                }
+            }
         }
+
 
         return response()->json($vehicles, Response::HTTP_OK);
     }

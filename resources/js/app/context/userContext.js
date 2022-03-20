@@ -37,9 +37,11 @@ export async function UserRegister(name, email, password) {
     }
 }
 
-export async function RequestVehicle(seats, origin, destination) {
+export async function RequestVehicle(origin, destination) {
 
-    const res = await search.requestVehicle(seats, origin, destination, localStorage.apikey)
+    const res = await search.requestVehicle(origin, destination, localStorage.apikey)
+
+    console.log(res)
 
     return {
         type: 'search',

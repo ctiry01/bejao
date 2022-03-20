@@ -52,7 +52,7 @@ class Vehicle extends Model
         ]);
     }
 
-    public function serialize()
+    public function serialize($user = false)
     {
         return [
             'key' => $this->key,
@@ -62,7 +62,7 @@ class Vehicle extends Model
             'fuel_consumption' => $this->fuel_consumption,
             'engine' => $this->engine->name,
             'active' => (bool)$this->is_active,
-            'user' => $this->user->serialize()
+            'user' => $user ? $this->user->serialize() : null
         ];
     }
 

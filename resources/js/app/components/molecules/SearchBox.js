@@ -18,17 +18,14 @@ export const SearchBox = () => {
     const userContextDispatcher = useUserDispatcher();
     const userContextState = useUserState();
 
-    console.log(userContextState)
-
     const onSubmmit = () => {
-        RequestVehicle(seats, origin, destination)
+        RequestVehicle(origin, destination)
             .then((r) => {
                 userContextDispatcher(r)
                 setShowModal(true)
             }).catch((e) => {
             console.log('error')
             console.log(JSON.parse(e))
-
         })
     }
 
@@ -36,8 +33,7 @@ export const SearchBox = () => {
         <>
             <Card>
                 <Title>Encuentra un coche para compartir</Title>
-                <CustomInput placeholder={'Número de pasajeros'} label={'Número de pasajeros'} value={seats} type={'number'}
-                             onChange={(e) => setSeats(e.target.value)}/>
+
                 <Separator/>
                 <CustomInput placeholder={'Ciudad origen'} label={'Ciudad origen'} onChange={(e) => setOrigin(e.target.value)}/>
                 <Separator/>
@@ -54,9 +50,9 @@ export const SearchBox = () => {
                                 <SearchResultCard
                                     seats={res.seats}
                                     model={res.model}
+                                    brand={res.brand}
                                     fuelCons={res.fuel_consumption}
                                     engine={res.engine}
-                                    brand={res.brand}
                                     name={res.user.name}
                                     email={res.user.email}
                                 />
