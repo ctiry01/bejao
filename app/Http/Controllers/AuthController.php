@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Vehicle;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -50,14 +51,35 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|string|unique:users,email',
-            'password' => 'required|string'
+            'password' => 'required|string',
+            'origin_address' => 'required|string',
+            'destination_address' => 'required|string',
+            'brand' => 'nullable|string',
+            'model' => 'nullable|string',
+            'seats' => 'nullable|numeric',
+            'fuel_consumption' => 'nullable|numeric',
         ]);
 
         $user = User::init(
             $request->get('name'),
             $request->get('email'),
             $request->get('password'),
+            $request->get('origin_address'),
+            $request->get('destination_address'),
         );
+
+        if ($request->get('brand') &&
+            $request->get('model') &&
+            $request->get('seats') &&
+            $request->get('fuel_consumption')) {
+            Vehicle::init(
+                $request->get('brand'),
+                $request->get('model'),
+                $request->get('seats'),
+                $request->get('fuel_consumption'),
+                $user
+            );
+        }
 
         $token = $user->createToken('myapptoken')->plainTextToken;
 
@@ -69,7 +91,8 @@ class AuthController extends Controller
         return response($response, 201);
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         auth()->user()->tokens()->delete();
 
         return [

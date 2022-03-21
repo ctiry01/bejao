@@ -73,6 +73,8 @@ class User extends Authenticatable
         return [
             'name' => $this->name,
             'email' => $this->email,
+            'origin_address' => $this->origin_address,
+            'destination_address' => $this->destination_address,
             'vehicle' => $this->vehicle ? $this->vehicle->serialize() : null,
         ];
     }

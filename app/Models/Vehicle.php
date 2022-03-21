@@ -15,39 +15,27 @@ class Vehicle extends Model
 
     protected $fillable = [
         'key',
-        'id_brand',
+        'brand',
         'model',
         'seats',
         'fuel_consumption',
-        'id_engine',
         'is_active',
         'id_user',
     ];
-
-    public function brand(): HasOne
-    {
-        return $this->hasOne(Brands::class, 'id', 'id_brand');
-    }
-
-    public function engine(): HasOne
-    {
-        return $this->hasOne(Engine::class, 'id', 'id_engine');
-    }
 
     public function user(): HasOne
     {
         return $this->hasOne(User::class, 'id', 'id_user');
     }
 
-    public static function init(Brands $brand, string $model, int $seats, float $fuel_consumtion, Engine $engine, User $user): Vehicle
+    public static function init(string $brand, string $model, int $seats, float $fuel_consumtion, User $user): Vehicle
     {
         return Vehicle::create([
             'key' => 'v-' . Uuid::uuid4(),
-            'id_brand' => $brand->id,
+            'brand' => $brand,
             'model' => $model,
             'seats' => $seats,
             'fuel_consumption' => $fuel_consumtion,
-            'id_engine' => $engine->id,
             'id_user' => $user->id
         ]);
     }
@@ -56,11 +44,10 @@ class Vehicle extends Model
     {
         return [
             'key' => $this->key,
-            'brand' => $this->brand->name,
+            'brand' => $this->brand,
             'model' => $this->model,
             'seats' => $this->seats,
             'fuel_consumption' => $this->fuel_consumption,
-            'engine' => $this->engine->name,
             'active' => (bool)$this->is_active,
             'user' => $user ? $this->user->serialize() : null
         ];

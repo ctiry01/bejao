@@ -27,12 +27,10 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
 
-Route::middleware('auth:sanctum')->get('/vehicles', [VehicleController::class, 'index']);
 Route::middleware('auth:sanctum')->post('/vehicle', [VehicleController::class, 'store']);
 Route::middleware('auth:sanctum')->post('/vehicle/enable', [VehicleController::class, 'enable']);
 Route::middleware('auth:sanctum')->post('/vehicle/disable', [VehicleController::class, 'disable']);
 Route::middleware('auth:sanctum')->post('/vehicle/remove', [VehicleController::class, 'remove']);
-
 
 Route::middleware('auth:sanctum')->post('/request-vehicle', [RequestVehicleController::class, 'index']);
 

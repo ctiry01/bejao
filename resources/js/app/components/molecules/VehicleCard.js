@@ -12,7 +12,6 @@ export const VehicleCard = ({brand, model, seats, fuelCons, engine, active}) => 
             <span><b>Modelo:</b> {model}</span>
             <span><b>Número de plazas:</b> {seats}</span>
             <span><b>Consumo:</b> {fuelCons}</span>
-            <span><b>Motor:</b> {engine}</span>
         </Wrapper>
     )
 }

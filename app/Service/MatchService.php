@@ -28,58 +28,16 @@ class MatchService
 
         $vehiclesCopy = $vehicles;
 
-        function loopAndGetValues($arrayVehicles, &$bufferVehicle, $consumption, $seats, $id)
-        {
-            for ($i = 0; $i < count($arrayVehicles); $i++) {
-
-                $buffer [] = [
-                    $consumption => $arrayVehicles[$i][$consumption],
-                    $seats => $arrayVehicles[$i][$seats],
-                    $id => $arrayVehicles[$i][$id]
-                ];
-
-                if ($i === count($arrayVehicles) - 1) {
-                    $bufferArrayIdVehicles = [];
-                    foreach ($buffer as $elem) {
-                        $bufferArrayIdVehicles [] = $elem['id'];
-                    }
-
-                    $bufferVehicle [] = [
-                        $consumption => array_sum(array_column($buffer, $consumption)),
-                        $seats => array_sum(array_column($buffer, $seats)),
-                        $id => $bufferArrayIdVehicles
-                    ];
-
-                    if ($arrayVehicles[0][$id] !== $arrayVehicles[count($arrayVehicles) - 1][$id]) {
-                        $bufferArrayIdVehicles = [];
-                        $bufferArrayIdVehicles [] = $arrayVehicles[0][$id];
-                        $bufferArrayIdVehicles [] = $arrayVehicles[count($arrayVehicles) - 1][$id];
-
-                        $bufferVehicle [] = [
-                            $consumption => $arrayVehicles[0][$consumption] + $arrayVehicles[count($arrayVehicles) - 1][$consumption],
-                            $seats => $arrayVehicles[0][$seats] + $arrayVehicles[count($arrayVehicles) - 1][$seats],
-                            $id => $bufferArrayIdVehicles
-                        ];
-                    }
-
-                    unset($arrayVehicles[count($arrayVehicles) - 1]);
-                    $buffer = [];
-
-                    $i = -1;
-                }
+            for ($i = 0; $i < count($vehiclesCopy); $i++) {
+                self::checkCases(
+                    $vehicles,
+                    $bufferVehicle,
+                    self::VEHICLE_CONSUMPTION,
+                    self::VEHICLE_SEATS,
+                    self::VEHICLE_ID
+                );
+                array_shift($vehicles);
             }
-        }
-
-        for ($i = 0; $i < count($vehiclesCopy); $i++) {
-            loopAndGetValues(
-                $vehicles,
-                $bufferVehicle,
-                self::VEHICLE_CONSUMPTION,
-                self::VEHICLE_SEATS,
-                self::VEHICLE_ID
-            );
-            array_shift($vehicles);
-        }
 
         $bufferVehicle = array_map("unserialize", array_unique(array_map("serialize", $bufferVehicle)));
 
@@ -98,5 +56,47 @@ class MatchService
         }
 
         return null;
+    }
+
+    private function checkCases($arrayVehicles, &$bufferVehicle, $consumption, $seats, $id)
+    {
+        for ($i = 0; $i < count($arrayVehicles); $i++) {
+
+            $buffer [] = [
+                $consumption => $arrayVehicles[$i][$consumption],
+                $seats => $arrayVehicles[$i][$seats],
+                $id => $arrayVehicles[$i][$id]
+            ];
+
+            if ($i === count($arrayVehicles) - 1) {
+                $bufferArrayIdVehicles = [];
+                foreach ($buffer as $elem) {
+                    $bufferArrayIdVehicles [] = $elem['id'];
+                }
+
+                $bufferVehicle [] = [
+                    $consumption => array_sum(array_column($buffer, $consumption)),
+                    $seats => array_sum(array_column($buffer, $seats)),
+                    $id => $bufferArrayIdVehicles
+                ];
+
+                if ($arrayVehicles[0][$id] !== $arrayVehicles[count($arrayVehicles) - 1][$id]) {
+                    $bufferArrayIdVehicles = [];
+                    $bufferArrayIdVehicles [] = $arrayVehicles[0][$id];
+                    $bufferArrayIdVehicles [] = $arrayVehicles[count($arrayVehicles) - 1][$id];
+
+                    $bufferVehicle [] = [
+                        $consumption => $arrayVehicles[0][$consumption] + $arrayVehicles[count($arrayVehicles) - 1][$consumption],
+                        $seats => $arrayVehicles[0][$seats] + $arrayVehicles[count($arrayVehicles) - 1][$seats],
+                        $id => $bufferArrayIdVehicles
+                    ];
+                }
+
+                unset($arrayVehicles[count($arrayVehicles) - 1]);
+                $buffer = [];
+
+                $i = -1;
+            }
+        }
     }
 }

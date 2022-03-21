@@ -16,10 +16,6 @@ export const LoginFormCard = () => {
     const userContextDispatcher = useUserDispatcher();
     const navigate = useNavigate();
 
-    //const userContextState = useUserState();
-    //console.log(userContextState);
-
-
     const onSubmmit = () => {
         setLoading(true)
         UserLogin(email, password)
@@ -42,9 +38,9 @@ export const LoginFormCard = () => {
     return (
         <Card>
             <h1>Acceder a tu cuenta</h1>
-            <CustomInput placeholder={'email'} onChange={(e) => setEmail(e.target.value)}/>
+            <CustomInput placeholder={'email'} onChange={(e) => setEmail(e.target.value)} label={'email'}/>
             <Separator/>
-            <CustomInput placeholder={'password'} type={'password'} onChange={(e) => setPassword(e.target.value)}/>
+            <CustomInput placeholder={'password'} type={'password'} onChange={(e) => setPassword(e.target.value)} label={'password'}/>
             <p>¿No tienes cuenta? <Link to="/register">Regístrate</Link></p>
             <Separator/>
             <CustomButton onClick={onSubmmit} disabled={!email && !password}>Acceder</CustomButton>

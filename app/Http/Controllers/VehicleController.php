@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Brands;
-use App\Models\Engine;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,53 +10,26 @@ use Illuminate\Http\JsonResponse;
 
 class VehicleController extends Controller
 {
-    public function index(): JsonResponse
-    {
-        $user = Auth::user();
-
-        $bufferVehicles = [];
-
-        foreach ($user->vehicles as $vehicle) {
-            $bufferVehicles [] = $vehicle->serialize();
-        }
-
-        return response()->json($bufferVehicles, Response::HTTP_OK);
-    }
-
     public function store(Request $request): JsonResponse
     {
         $request->validate([
-            'brandKey' => 'required|string',
-            'engineKey' => 'required|string',
+            'brand' => 'required|string',
             'model' => 'required|string',
             'seats' => 'required|numeric',
             'fuel_consumption' => 'required|numeric',
         ]);
 
-        $brand = Brands::byKey($request->get('brandKey'))->first();
-
-        if (!$brand) {
-            return response()->json('not found', Response::HTTP_NOT_FOUND);
-        }
-
-        $engine = Engine::byKey($request->get('engineKey'))->first();
-
-        if (!$engine) {
-            return response()->json('not found', Response::HTTP_NOT_FOUND);
-        }
-
         $user = Auth::user();
 
         $vehicle = Vehicle::init(
-            $brand,
+            $request->get('brand'),
             $request->get('model'),
             $request->get('seats'),
             $request->get('fuel_consumption'),
-            $engine,
             $user
         );
 
-        return response()->json($vehicle->serialize(), Response::HTTP_CREATED);
+        return response()->json($vehicle->serialize(true), Response::HTTP_CREATED);
     }
 
     public function enable(Request $request): JsonResponse
@@ -69,23 +40,14 @@ class VehicleController extends Controller
 
         $user = Auth::user();
 
-
-        $vehicleSelected = null;
-
-        foreach ($user->vehicles as $vehicle) {
-            if ($vehicle->key === $request->get('key')) {
-                $vehicleSelected = $vehicle;
-            }
-        }
-
-        if (!$vehicleSelected) {
+        if (!$user->vehicle) {
             return response()->json('not found', Response::HTTP_NOT_FOUND);
         }
 
-        $vehicleSelected->enable();
-        $vehicleSelected->save();
+        $user->vehicle->enable();
+        $user->vehicle->save();
 
-        return response()->json($vehicleSelected->serialize(), Response::HTTP_OK);
+        return response()->json($user->serialize(), Response::HTTP_OK);
     }
 
     public function disable(Request $request): JsonResponse
@@ -96,22 +58,14 @@ class VehicleController extends Controller
 
         $user = Auth::user();
 
-        $vehicleSelected = null;
-
-        foreach ($user->vehicles as $vehicle) {
-            if ($vehicle->key === $request->get('key')) {
-                $vehicleSelected = $vehicle;
-            }
-        }
-
-        if (!$vehicleSelected) {
+        if (!$user->vehicle) {
             return response()->json('not found', Response::HTTP_NOT_FOUND);
         }
 
-        $vehicleSelected->disable();
-        $vehicleSelected->save();
+        $user->vehicle->disable();
+        $user->vehicle->save();
 
-        return response()->json($vehicleSelected->serialize(), Response::HTTP_OK);
+        return response()->json($user->serialize(), Response::HTTP_OK);
     }
 
     public function remove(Request $request): JsonResponse

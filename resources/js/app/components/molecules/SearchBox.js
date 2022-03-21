@@ -10,7 +10,6 @@ import {SearchResultCard} from "./SearchResultCard";
 
 
 export const SearchBox = () => {
-    const [seats, setSeats] = useState(1);
     const [origin, setOrigin] = useState();
     const [destination, setDestination] = useState();
     const [showModal, setShowModal] = useState(false);
@@ -34,10 +33,16 @@ export const SearchBox = () => {
             <Card>
                 <Title>Encuentra un coche para compartir</Title>
 
+                <WrapperInfoTrip>
+                    <p><b>Origen:</b> {userContextState.userData.user.origin_address}</p>
+                    <p><b>Destino:</b> {userContextState.userData.user.destination_address}</p>
+                </WrapperInfoTrip>
                 <Separator/>
-                <CustomInput placeholder={'Ciudad origen'} label={'Ciudad origen'} onChange={(e) => setOrigin(e.target.value)}/>
+                <CustomInput placeholder={'Ciudad origen'} label={'Ciudad origen'}
+                             onChange={(e) => setOrigin(e.target.value)}/>
                 <Separator/>
-                <CustomInput placeholder={'Ciudad destino'} label={'Ciudad destino'} onChange={(e) => setDestination(e.target.value)}/>
+                <CustomInput placeholder={'Ciudad destino'} label={'Ciudad destino'}
+                             onChange={(e) => setDestination(e.target.value)}/>
                 <Separator/>
                 <CustomButton onClick={onSubmmit}>Buscar</CustomButton>
             </Card>
@@ -52,7 +57,6 @@ export const SearchBox = () => {
                                     model={res.model}
                                     brand={res.brand}
                                     fuelCons={res.fuel_consumption}
-                                    engine={res.engine}
                                     name={res.user.name}
                                     email={res.user.email}
                                 />
@@ -67,6 +71,13 @@ export const SearchBox = () => {
         </>
     )
 }
+
+const WrapperInfoTrip = styled.div`
+    > p {
+        margin: 0;
+    }
+`
+
 
 const Title = styled.h2`
     margin-top: 0;

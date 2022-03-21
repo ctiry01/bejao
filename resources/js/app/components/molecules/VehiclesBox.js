@@ -3,30 +3,35 @@ import {useUserState} from "../../context/userContext";
 import {Card} from "../atoms/Card";
 import {VehicleCard} from "./VehicleCard";
 import styled from "styled-components";
+import {Link} from "react-router-dom";
 
 
-export const VehiclesBox = () => {
+export const VehiclesBox = ({vehicle}) => {
     const userContextState = useUserState();
 
     if (!userContextState.userData) return null
+    if (!userContextState.userData.user) return null
 
-    console.log(userContextState.userData.user.vehicle)
     return (
         <Card>
             <Title>Tus vehículos</Title>
             <WrapperVehicles>
                 {userContextState.userData.user.vehicle &&
                     <VehicleCard
-                        key={vehicle.key}
-                        brand={vehicle.brand}
-                        engine={vehicle.engine}
-                        fuelCons={vehicle.fuel_consumption}
-                        model={vehicle.model}
-                        seats={vehicle.seats}
-                        active={vehicle.active}
+                        key={userContextState.userData.user.vehicle.key}
+                        brand={userContextState.userData.user.vehicle.brand}
+                        engine={userContextState.userData.user.vehicle.engine}
+                        fuelCons={userContextState.userData.user.vehicle.fuel_consumption}
+                        model={userContextState.userData.user.vehicle.model}
+                        seats={userContextState.userData.user.vehicle.seats}
+                        active={userContextState.userData.user.vehicle.active}
                     />
                 }
-                {userContextState.userData.user.vehicle.length <= 0 && <p>No tienes vehículos dados de alta</p>}
+
+                {!userContextState.userData.user.vehicle &&
+                    <p>No hay vehículos</p>
+                }
+
             </WrapperVehicles>
         </Card>
     )

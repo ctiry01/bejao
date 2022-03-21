@@ -6,7 +6,7 @@ import {GiJourney} from "react-icons/gi";
 import {Separator} from "../atoms/Separator";
 
 
-export const SearchResultCard = ({brand, model, seats, fuelCons, engine, name, email, journeys}) => {
+export const SearchResultCard = ({brand, model, seats, fuelCons, name, email, journeys}) => {
 
     return (
         <Wrapper>
@@ -15,7 +15,6 @@ export const SearchResultCard = ({brand, model, seats, fuelCons, engine, name, e
             <span><b>Modelo:</b> {model}</span>
             <span><b>Número de plazas:</b> {seats}</span>
             <span><b>Consumo:</b> {fuelCons}</span>
-            <span><b>Motor:</b> {engine}</span>
             <Separator size={'0.2'}/>
             <CgProfile/>
             <span><b>Nombre:</b> {name}</span>

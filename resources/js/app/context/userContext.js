@@ -25,8 +25,8 @@ export async function UserLogin(email, password) {
     }
 }
 
-export async function UserRegister(name, email, password) {
-    const res = await user.register(name, email, password)
+export async function UserRegister(name, email, password, originAddress, destinationAddress, brand, model, seats, consumption) {
+    const res = await user.register(name, email, password, originAddress, destinationAddress, brand, model, seats, consumption)
 
     localStorage.clear()
     localStorage.setItem('apikey', res.token)
@@ -37,11 +37,18 @@ export async function UserRegister(name, email, password) {
     }
 }
 
+export async function VehicleRegister(brand, model, seats, fuel) {
+    const res = await user.vehicle(brand, model, seats, fuel, localStorage.apikey)
+
+    return {
+        type: 'register_vehicle',
+        payload: res
+    }
+}
+
 export async function RequestVehicle(origin, destination) {
 
     const res = await search.requestVehicle(origin, destination, localStorage.apikey)
-
-    console.log(res)
 
     return {
         type: 'search',
@@ -72,6 +79,13 @@ const ContextReducer = (state, action) => {
             return {
                 ...state,
                 resultData: action.payload
+            }
+
+        case 'register_vehicle':
+
+            return {
+                ...state.userData.user,
+                vehicle: action.payload
             }
 
         default: {

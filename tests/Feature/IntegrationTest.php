@@ -2,8 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Brands;
-use App\Models\Engine;
 use App\Models\User;
 use App\Models\Vehicle;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -48,7 +46,10 @@ class IntegrationTest extends TestCase
         $response = $this->post('/api/register', [
             'name' => 'example',
             'email' => 'example@mail.com',
-            'password' => 'asdfasdf'
+            'password' => 'password',
+            'origin' => 'barcelona',
+            'origin_address' => 'sevilla',
+            'destination_address' => 'asdfasdf'
         ]);
 
         //then
@@ -56,30 +57,38 @@ class IntegrationTest extends TestCase
         self::removeRecords();
     }
 
-    public function test_vehicles()
+    public function test_register_with_vehicle()
     {
         //given
-        self::createExampleUser();
 
         //when
-        $response = $this->get('/api/vehicles', ['Authorization' => self::getToken()]);
+        $response = $this->post('/api/register', [
+            'name' => 'example',
+            'email' => 'example@mail.com',
+            'password' => 'password',
+            'origin' => 'barcelona',
+            'origin_address' => 'sevilla',
+            'destination_address' => 'asdfasdf',
+            'brand' => 'brand',
+            'model' => 'model',
+            'seats' => 4,
+            'fuel_consumption' => 6,
+        ]);
 
         //then
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         self::removeRecords();
     }
+
 
     public function test_vehicle_create()
     {
         //given
         self::createExampleUser();
-        $brand = self::createExampleBrand();
-        $engine = self::createExampleEngine();
 
         //when
         $response = $this->post('/api/vehicle', [
-            'brandKey' => $brand->key,
-            'engineKey' => $engine->key,
+            'brand' => 'brand',
             'model' => 'A5',
             'seats' => 5,
             'fuel_consumption' => 6
@@ -90,14 +99,16 @@ class IntegrationTest extends TestCase
         self::removeRecords();
     }
 
+
     public function test_vehicle_enable()
     {
         //given
-        $vehicle = self::createExampleVehicle();
+        $user = self::createExampleUser();
+        self::createExampleVehicle($user);
 
         //when
         $response = $this->post('/api/vehicle/enable', [
-            'key' => $vehicle->key,
+            'key' => $user->vehicle->key,
         ], ['Authorization' => self::getToken()]);
 
         //then
@@ -108,11 +119,12 @@ class IntegrationTest extends TestCase
     public function test_vehicle_disable()
     {
         //given
-        $vehicle = self::createExampleVehicle();
+        $user = self::createExampleUser();
+        self::createExampleVehicle($user);
 
         //when
-        $response = $this->post('/api/vehicle/enable', [
-            'key' => $vehicle->key,
+        $response = $this->post('/api/vehicle/disable', [
+            'key' => $user->vehicle->key,
         ], ['Authorization' => self::getToken()]);
 
         //then
@@ -123,11 +135,26 @@ class IntegrationTest extends TestCase
     public function test_require_search_vehicle()
     {
         //given
-        self::createExampleVehicle();
+        self::createExampleUser();
+
+        //when
+        $response = $this->post('/api/request-vehicle', [], ['Authorization' => self::getToken()]);
+
+        //then
+        $response->assertStatus(200);
+        self::removeRecords();
+    }
+
+    public function test_require_search_vehicle_custom_address()
+    {
+        //given
+        self::createExampleUser();
 
         //when
         $response = $this->post('/api/request-vehicle', [
-            'seats' => 1,
+            'origin_address' => 'origin',
+            'destination_address' => 'destination',
+
         ], ['Authorization' => self::getToken()]);
 
         //then
@@ -139,43 +166,28 @@ class IntegrationTest extends TestCase
     private function createExampleUser(): User
     {
         return User::init(
-            'test',
+            'name',
             'example@mail.com',
-            'asdfasdf'
+            'asdfasdf',
+            'origin',
+            'destination',
         );
     }
 
-    private function createExampleVehicle(): Vehicle
+    private function createExampleVehicle(User $user): Vehicle
     {
         return Vehicle::init(
-            self::createExampleBrand(),
+            'any brand',
             'any model',
             5,
             6.4,
-            self::createExampleEngine(),
-            self::createExampleUser()
-        );
-    }
-
-    private function createExampleBrand(): Brands
-    {
-        return Brands::init(
-            'any brand'
-        );
-    }
-
-    private function createExampleEngine(): Engine
-    {
-        return Engine::init(
-            'any engine'
+            $user
         );
     }
 
     private function removeRecords()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
-        DB::table('brands')->truncate();
-        DB::table('engines')->truncate();
         DB::table('users')->truncate();
         DB::table('vehicles')->truncate();
     }

@@ -9,7 +9,7 @@ const TextInput = forwardRef(function FreeActivityPasswordForm(
 ) {
     return (
         <Wrapper>
-            {label && <label>{label}</label>}
+            {label && <CustomLabel>{label}</CustomLabel>}
             <Input placeholder={placeholder} {...other} ref={ref} />
             {valid && <ValidIcon size="1.4rem" color="#72cc77" />}
         </Wrapper>
@@ -40,6 +40,11 @@ const ValidIcon = styled(BsCheckCircleFill)`
   position: absolute;
   right: 10px;
   top: 15px;
+`
+
+const CustomLabel = styled.label`
+  padding-left: 0.3rem;
+
 `
 
 export default TextInput

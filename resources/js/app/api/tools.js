@@ -8,10 +8,6 @@ export async function postApi(url, payload, tk) {
         'Authorization' : 'Bearer '+tk
     }
 
-    console.log('tk')
-    console.log(tk)
-
-
     const response = await fetch(
         `${SERVER}${url}`,
         {

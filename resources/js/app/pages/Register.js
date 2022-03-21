@@ -13,7 +13,8 @@ export const Register = () => {
 
 const WrapperLogin = styled.div`
     width: 100%;
-    height: 80vh;
+    min-height: 80vh;
+    margin: 3rem 0;
     display: flex;
     justify-content: center;
     align-items: center;

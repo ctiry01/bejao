@@ -10,8 +10,7 @@ import {Card} from "../components/atoms/Card";
 export const Home = () => {
     const navigate = useNavigate();
     const userContextState = useUserState();
-
-    //console.log(userContextState)
+        console.log(userContextState)
 
     useEffect(() => {
         if (!(userContextState.userData && userContextState.userData.token)) {
@@ -28,7 +27,7 @@ export const Home = () => {
                 <h1>¡Hola {userContextState.userData.user.name}!</h1>
             </Card>
             <Separator />
-            {/*<VehiclesBox />*/}
+            <VehiclesBox />
             <Separator />
             <SearchBox />
         </WrapperLogin>
