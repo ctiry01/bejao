@@ -2,8 +2,6 @@
 
 namespace App\Service;
 
-use Dflydev\DotAccessData\Data;
-
 class MatchService
 {
     const VEHICLE_CONSUMPTION = 'consumption';
@@ -13,41 +11,23 @@ class MatchService
     public function searchVehicles($allTripUsers)
     {
         $vehicles = [];
-
-        foreach ($allTripUsers as $user) {
-            if ($user->vehicle) {
-                $vehicles [] = [
-                    self::VEHICLE_CONSUMPTION => $user->vehicle->fuel_consumption,
-                    self::VEHICLE_SEATS => $user->vehicle->seats,
-                    self::VEHICLE_ID => $user->vehicle->id
-                ];
-            }
-        }
-
         $bufferVehicle = [];
+
+        $vehicles = $this->getVehicles($allTripUsers, $vehicles);
 
         $vehiclesCopy = $vehicles;
 
-            for ($i = 0; $i < count($vehiclesCopy); $i++) {
-                self::checkCases(
-                    $vehicles,
-                    $bufferVehicle,
-                    self::VEHICLE_CONSUMPTION,
-                    self::VEHICLE_SEATS,
-                    self::VEHICLE_ID
-                );
-                array_shift($vehicles);
-            }
+        list($bufferVehicle) = $this->checkConvinationsInEachFirstPosition($vehiclesCopy, $vehicles, $bufferVehicle);
 
         $bufferVehicle = array_map("unserialize", array_unique(array_map("serialize", $bufferVehicle)));
 
-        $bufferVehicle = array_values($bufferVehicle);
+        $bufferVehicle = $this->setIndexInArray($bufferVehicle);
 
         uasort($bufferVehicle, function ($a, $b) {
             return strnatcmp($a[self::VEHICLE_CONSUMPTION], $b[self::VEHICLE_CONSUMPTION]);
         });
 
-        $bufferVehicle = array_values($bufferVehicle);
+        $bufferVehicle = $this->setIndexInArray($bufferVehicle);
 
         foreach ($bufferVehicle as $vehicle) {
             if ($vehicle['seats'] >= count($allTripUsers)) {
@@ -98,5 +78,54 @@ class MatchService
                 $i = -1;
             }
         }
+    }
+
+    /**
+     * @param $allTripUsers
+     * @param array $vehicles
+     * @return array
+     */
+    private function getVehicles($allTripUsers, array $vehicles): array
+    {
+        foreach ($allTripUsers as $user) {
+            if ($user->vehicle) {
+                $vehicles [] = [
+                    self::VEHICLE_CONSUMPTION => $user->vehicle->fuel_consumption,
+                    self::VEHICLE_SEATS => $user->vehicle->seats,
+                    self::VEHICLE_ID => $user->vehicle->id
+                ];
+            }
+        }
+        return $vehicles;
+    }
+
+    /**
+     * @param array $vehiclesCopy
+     * @param array $vehicles
+     * @param array $bufferVehicle
+     * @return array
+     */
+    private function checkConvinationsInEachFirstPosition(array $vehiclesCopy, array $vehicles, array $bufferVehicle): array
+    {
+        for ($i = 0; $i < count($vehiclesCopy); $i++) {
+            self::checkCases(
+                $vehicles,
+                $bufferVehicle,
+                self::VEHICLE_CONSUMPTION,
+                self::VEHICLE_SEATS,
+                self::VEHICLE_ID
+            );
+            array_shift($vehicles);
+        }
+        return array($bufferVehicle, $vehicles);
+    }
+
+    /**
+     * @param array $bufferVehicle
+     * @return array
+     */
+    private function setIndexInArray(array $bufferVehicle): array
+    {
+        return array_values($bufferVehicle);
     }
 }
